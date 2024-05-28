@@ -1,131 +1,25 @@
----
-jupyter:
-  colab:
-  kernelspec:
-    display_name: Python 3
-    name: python3
-  language_info:
-    name: python
-  nbformat: 4
-  nbformat_minor: 0
----
-
-::: {.cell .markdown id="xH2qaG26Z7JL"}
-\#**Teknologi Basis Data** Nama : Kirana Ratu Malhanny
+# **Teknologi Basis Data**
+Nama : Kirana Ratu Malhanny
 
 NIM : 121450082
 
 Kelas : RB
-:::
 
-::: {.cell .markdown id="qAi2NLxIaRJy"}
-\#**Three Ways of Storing and Accessing Lots of Images in Python**
-:::
+# **Three Ways of Storing and Accessing Lots of Images in Python**
 
-::: {.cell .markdown id="T1qBR9ZYaq1S"}
-### **Latar Belakang**
+## Latar Belakang
+Menyimpan dan mengakses gambar dalam Python bukanlah masalah besar. Python menyediakan Python Imaging Library (PIL) untuk menangani ratusan gambar tanpa kesulitan. Memilih untuk menyimpan gambar dalam format .png atau .jpg di disk adalah pilihan yang baik.
 
-Menyimpan dan mengakses gambar dalam Python tidaklah masalah besar.
-Python menyediakan Python Imaging Library (PIL) untuk menangani ratusan
-gambar tanpa kesulitan. Memilih untuk menyimpan gambar dalam format .png
-atau .jpg di disk adalah pilihan yang baik.
+Namun, dengan berkembangnya teknologi, kebutuhan akan jumlah gambar semakin besar. Algoritma seperti Convolutional Neural Networks (CNNs) dapat mengolah dataset gambar yang besar, seperti yang ada dalam ImageNet yang terdiri dari lebih dari 14 juta gambar.
 
-Namun, dengan berkembangnya teknologi, kebutuhan akan jumlah gambar
-semakin besar. Algoritma seperti Convolutional Neural Networks (CNNs)
-dapat mengolah dataset gambar yang besar, seperti yang ada dalam
-ImageNet yang terdiri dari lebih dari 14 juta gambar.
+PIL tidak mampu menangani jumlah gambar sebesar itu dengan mudah. Bayangkan berapa lama waktu yang diperlukan untuk memuat semua gambar tersebut ke dalam memori untuk proses pelatihan, terutama saat memprosesnya dalam batch besar. Oleh karena itu, beberapa metode telah dikembangkan untuk menyimpan dan mengakses gambar dalam jumlah besar di Python.
 
-PIL tidak mampu menangani jumlah gambar sebesar itu dengan mudah.
-Bayangkan berapa lama waktu yang diperlukan untuk memuat semua gambar
-tersebut ke dalam memori untuk proses pelatihan, terutama saat
-memprosesnya dalam batch besar. Oleh karena itu, beberapa metode telah
-dikembangkan untuk menyimpan dan mengakses gambar dalam jumlah besar di
-Python.
-:::
+## Setup
+Dataset yang dipakai merupakan Canadian Institute for Advanced Research image dataset atau dikenal sebagai CIFAR-10. Berisi 60,000 gambar dengan 32x32 ukuran pixel, didalamnya terdapat beragam kelas objek seperti pesawat, anjing, mobil, kusing dan sebagainya.
 
-::: {.cell .markdown id="tAYyCuX0dUvT"}
-## **Setup**
+Berikut adalah kode untuk mengesktrak 5 batch dataset dan memasukkan gambar menjadi numpy array.
 
-Dataset yang dipakai merupakan Canadian Institute for Advanced Research
-image dataset atau dikenal sebagai CIFAR-10. Berisi 60,000 gambar dengan
-32x32 ukuran pixel, didalamnya terdapat beragam kelas objek seperti
-pesawat, anjing, mobil, kusing dan sebagainya.
-
-Berikut adalah kode untuk mengesktrak 5 batch dataset dan memasukkan
-gambar menjadi numpy array.
-:::
-
-::: {.cell .code colab="{\"base_uri\":\"https://localhost:8080/\"}" id="pqCBH0B3z3OR" outputId="5a7dfdaf-a8ab-43d4-914d-efda615c13d7"}
-``` python
-pip install pandasql
-```
-
-::: {.output .stream .stdout}
-    Collecting pandasql
-      Downloading pandasql-0.7.3.tar.gz (26 kB)
-      Preparing metadata (setup.py) ... ent already satisfied: numpy in /usr/local/lib/python3.10/dist-packages (from pandasql) (1.25.2)
-    Requirement already satisfied: pandas in /usr/local/lib/python3.10/dist-packages (from pandasql) (2.0.3)
-    Requirement already satisfied: sqlalchemy in /usr/local/lib/python3.10/dist-packages (from pandasql) (2.0.30)
-    Requirement already satisfied: python-dateutil>=2.8.2 in /usr/local/lib/python3.10/dist-packages (from pandas->pandasql) (2.8.2)
-    Requirement already satisfied: pytz>=2020.1 in /usr/local/lib/python3.10/dist-packages (from pandas->pandasql) (2023.4)
-    Requirement already satisfied: tzdata>=2022.1 in /usr/local/lib/python3.10/dist-packages (from pandas->pandasql) (2024.1)
-    Requirement already satisfied: typing-extensions>=4.6.0 in /usr/local/lib/python3.10/dist-packages (from sqlalchemy->pandasql) (4.11.0)
-    Requirement already satisfied: greenlet!=0.4.17 in /usr/local/lib/python3.10/dist-packages (from sqlalchemy->pandasql) (3.0.3)
-    Requirement already satisfied: six>=1.5 in /usr/local/lib/python3.10/dist-packages (from python-dateutil>=2.8.2->pandas->pandasql) (1.16.0)
-    Building wheels for collected packages: pandasql
-      Building wheel for pandasql (setup.py) ... e=pandasql-0.7.3-py3-none-any.whl size=26771 sha256=e50df0e9c9aff840f92754ce13d7dd41414a03ed1d469f6420adfddd908ad42c
-      Stored in directory: /root/.cache/pip/wheels/e9/bc/3a/8434bdcccf5779e72894a9b24fecbdcaf97940607eaf4bcdf9
-    Successfully built pandasql
-    Installing collected packages: pandasql
-    Successfully installed pandasql-0.7.3
-:::
-:::
-
-::: {.cell .code colab="{\"base_uri\":\"https://localhost:8080/\"}" id="BXO19NAr14yr" outputId="d29eb771-8c0d-4329-d840-2f635dbd52f9"}
-``` python
-pip install panda
-```
-
-::: {.output .stream .stdout}
-    Collecting panda
-      Downloading panda-0.3.1.tar.gz (5.8 kB)
-      Preparing metadata (setup.py) ... ent already satisfied: setuptools in /usr/local/lib/python3.10/dist-packages (from panda) (67.7.2)
-    Requirement already satisfied: requests in /usr/local/lib/python3.10/dist-packages (from panda) (2.31.0)
-    Requirement already satisfied: charset-normalizer<4,>=2 in /usr/local/lib/python3.10/dist-packages (from requests->panda) (3.3.2)
-    Requirement already satisfied: idna<4,>=2.5 in /usr/local/lib/python3.10/dist-packages (from requests->panda) (3.7)
-    Requirement already satisfied: urllib3<3,>=1.21.1 in /usr/local/lib/python3.10/dist-packages (from requests->panda) (2.0.7)
-    Requirement already satisfied: certifi>=2017.4.17 in /usr/local/lib/python3.10/dist-packages (from requests->panda) (2024.2.2)
-    Building wheels for collected packages: panda
-      Building wheel for panda (setup.py) ... e=panda-0.3.1-py3-none-any.whl size=7239 sha256=cea8f48dc245caefe3aa4cfb90855ae93c7f31e653912d12f22364f798e8876d
-      Stored in directory: /root/.cache/pip/wheels/0e/8b/c3/ff9cbde1fffd8071cff8367a86f0350a1ce30a8d31b6a432e9
-    Successfully built panda
-    Installing collected packages: panda
-    Successfully installed panda-0.3.1
-:::
-:::
-
-::: {.cell .code colab="{\"base_uri\":\"https://localhost:8080/\"}" id="R4KqX_WE4tv2" outputId="1a4619a3-ad87-4fdf-c060-cef82cdc7ca3"}
-``` python
-import tarfile
-
-def extract_tar_gz(file_path, extract_path):
-    with tarfile.open(file_path, "r:gz") as tar:
-        tar.extractall(path=extract_path)
-        print(f"Files extracted to {extract_path}")
-
-# Contoh penggunaan
-file_path = "/content/cifar-10-python.tar.gz"
-extract_path = "path/to/extract/directory"
-extract_tar_gz(file_path, extract_path)
-```
-
-::: {.output .stream .stdout}
-    Files extracted to path/to/extract/directory
-:::
-:::
-
-::: {.cell .code colab="{\"base_uri\":\"https://localhost:8080/\"}" id="uEUJusaxeC1s" outputId="baec9285-4b41-4ec0-940d-625443755cf3"}
-``` python
+```python
 import numpy as np
 import pickle
 from pathlib import Path
@@ -158,124 +52,58 @@ print(f" - np.shape(images)     {np.shape(images)}")
 print(f" - np.shape(labels)     {np.shape(labels)}")
 ```
 
-::: {.output .stream .stdout}
-    Loaded CIFAR-10 training set:
-     - np.shape(images)     (50000, 32, 32, 3)
-     - np.shape(labels)     (50000,)
-:::
-:::
+Output: \
+![alt text](1.png)
 
-::: {.cell .code colab="{\"base_uri\":\"https://localhost:8080/\"}" id="J1RtzyxpfZOh" outputId="7e84a476-e599-4037-ccc3-93a8e0173c86"}
-``` python
-pip install Pillow
+```python
+pip install pillow
 ```
 
-::: {.output .stream .stdout}
-    Requirement already satisfied: Pillow in /usr/local/lib/python3.10/dist-packages (9.4.0)
-:::
-:::
+## **Getting Started With LMDB**
+LMDB, disebut juga sebagai "Lightning Database," adalah singkatan dari Lightning Memory-Mapped Database karena kecepatannya dan penggunaan file yang dipetakan ke memori. Ini adalah key-value store bagi basis data non-relasional. Dalam implementasinya, LMDB adalah pohon B+, di mana setiap elemen kunci-nilai adalah node dalam struktur grafik pohon. Kunci komponen B+ tree diatur sesuai dengan ukuran halaman sistem operasi, untuk efisiensi akses. LMDB memperoleh efisiensi dari pemetaan memori, mengembalikan pointer langsung ke alamat memori kunci dan nilai, tanpa perlu menyalin memori.
 
-::: {.cell .markdown id="hSVKynFWfg5Y"}
-### **Getting Started With LMDB**
-
-LMDB, disebut juga sebagai \"Lightning Database,\" adalah singkatan dari
-Lightning Memory-Mapped Database karena kecepatannya dan penggunaan file
-yang dipetakan ke memori. Ini adalah key-value store bagi basis data
-non-relasional. Dalam implementasinya, LMDB adalah pohon B+, di mana
-setiap elemen kunci-nilai adalah node dalam struktur grafik pohon. Kunci
-komponen B+ tree diatur sesuai dengan ukuran halaman sistem operasi,
-untuk efisiensi akses. LMDB memperoleh efisiensi dari pemetaan memori,
-mengembalikan pointer langsung ke alamat memori kunci dan nilai, tanpa
-perlu menyalin memori.
-:::
-
-::: {.cell .code colab="{\"base_uri\":\"https://localhost:8080/\"}" id="0EJ0aR9NgCSO" outputId="90eace04-e127-4300-d193-6a67a2d4318d"}
-``` python
+```python
 pip install lmdb
 ```
 
-::: {.output .stream .stdout}
-    Collecting lmdb
-      Downloading lmdb-1.4.1-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (299 kB)
-    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 0.0/299.2 kB ? eta -:--:--━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸━━━ 276.5/299.2 kB 8.1 MB/s eta 0:00:01━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 299.2/299.2 kB 6.7 MB/s eta 0:00:00
-    db
-    Successfully installed lmdb-1.4.1
-:::
-:::
+## **Getting Started With HDF5**
+HDF5 adalah singkatan dari Hierarchical Data Format. HDF berasal dari National Center for Supercomputing Applications yang digunakan sebagai format data ilmiah yang mudah dipindahkan dan ringkas. HDF5 sering digunakan, termasuk dalam proyek Data Bumi NASA.
 
-::: {.cell .markdown id="SdeZm4mBgHnc"}
-### **Getting Started With HDF5**
+File HDF terdiri dari dua jenis objek: \
+**1. Dataset (array multidimensi**)\
+**2. Grup**. \
+Array multidimensi dari berbagai ukuran dan jenis dapat disimpan sebagai dataset, dengan syarat dimensinya seragam. Meskipun demikian, keberagaman tetap bisa didapat karena grup dan dataset bisa bersarang(nested)
 
-HDF5 adalah singkatan dari Hierarchical Data Format. HDF berasal dari
-National Center for Supercomputing Applications yang digunakan sebagai
-format data ilmiah yang mudah dipindahkan dan ringkas. HDF5 sering
-digunakan, termasuk dalam proyek Data Bumi NASA.
-
-File HDF terdiri dari dua jenis objek:
-**1. Dataset (array multidimensi**)
-**2. Grup**.
-Array multidimensi dari berbagai ukuran dan jenis dapat disimpan sebagai
-dataset, dengan syarat dimensinya seragam. Meskipun demikian,
-keberagaman tetap bisa didapat karena grup dan dataset bisa
-bersarang(nested)
-:::
-
-::: {.cell .code colab="{\"base_uri\":\"https://localhost:8080/\"}" id="fq0x3kiYgyqv" outputId="37a5c32f-6096-4eb0-a6af-87f3f0ccdd24"}
-``` python
+```python
 pip install h5py
 ```
 
-::: {.output .stream .stdout}
-    Requirement already satisfied: h5py in /usr/local/lib/python3.10/dist-packages (3.9.0)
-    Requirement already satisfied: numpy>=1.17.3 in /usr/local/lib/python3.10/dist-packages (from h5py) (1.25.2)
-:::
-:::
+## **Storing A Single Image**
+Dalam proses ini, kita akan memeriksa perbandingan kuantitatif dari beberapa tugas dasar yang penting, yaitu:
 
-::: {.cell .markdown id="IsHO6OVcgyX_"}
-## **1. Storing A Single Image** {#1-storing-a-single-image}
+1. Durasi baca dan tulis file.
+2. Penggunaan memori disk.
 
-Dalam proses ini, kita akan memeriksa perbandingan kuantitatif dari
-beberapa tugas dasar yang penting, yaitu:
+Ketika kita berbicara tentang "file," kita fokus pada sejumlah besar file. Namun, penting untuk memahami perbedaannya karena beberapa metode mungkin dioptimalkan untuk operasi dan jumlah file yang berbeda.
 
-1.  Durasi baca dan tulis file.
-2.  Penggunaan memori disk.
+Dalam eksperimen ini, kita akan membandingkan kinerja di antara berbagai jumlah file, mulai dari satu gambar hingga 100.000 gambar. Mengingat kita memiliki lima kelompok CIFAR-10 dengan total 50.000 gambar, kita dapat menggunakan setiap gambar dua kali untuk mencapai total 100.000 gambar.
 
-Ketika kita berbicara tentang \"file,\" kita fokus pada sejumlah besar
-file. Namun, penting untuk memahami perbedaannya karena beberapa metode
-mungkin dioptimalkan untuk operasi dan jumlah file yang berbeda.
-
-Dalam eksperimen ini, kita akan membandingkan kinerja di antara berbagai
-jumlah file, mulai dari satu gambar hingga 100.000 gambar. Mengingat
-kita memiliki lima kelompok CIFAR-10 dengan total 50.000 gambar, kita
-dapat menggunakan setiap gambar dua kali untuk mencapai total 100.000
-gambar.
-:::
-
-::: {.cell .code id="dH6vlVa2imJ6"}
-``` python
+```python
 from pathlib import Path
 
 disk_dir = Path("data/disk/")
 lmdb_dir = Path("data/lmdb/")
 hdf5_dir = Path("data/hdf5/")
 ```
-:::
 
-::: {.cell .code id="GXrqO5kOipym"}
-``` python
-#Create folders
+```python
 disk_dir.mkdir(parents=True, exist_ok=True)
 lmdb_dir.mkdir(parents=True, exist_ok=True)
 hdf5_dir.mkdir(parents=True, exist_ok=True)
 ```
-:::
 
-::: {.cell .markdown id="32Tklrtliw7o"}
 ### **Storing to disk**
-:::
-
-::: {.cell .code id="fgV9uYk8i4Pf"}
-``` python
+```python
 from PIL import Image
 import csv
 
@@ -295,29 +123,11 @@ def store_single_disk(image, image_id, label):
         )
         writer.writerow([label])
 ```
-:::
+Pada pengaplikasiannya, diperlukan perhatian pada meta data. Meta data yang terlampir pada gambar, yang dalam dataset contoh adalah label gambar. Ketika menyimpan gambar ke disk, ada beberapa opsi untuk menyimpan meta data. Ada beberapa opsi dalam penyimpanan metadata tersebut. Salah satu solusinya adalah dengan mengkodekan label ke dalam nama gambar seperti yang dilakukan diatas.
 
-::: {.cell .markdown id="eCWR8nLWjR8k"}
-Pada pengaplikasiannya, diperlukan perhatian pada meta data. Meta data
-yang terlampir pada gambar, yang dalam dataset contoh adalah label
-gambar. Ketika menyimpan gambar ke disk, ada beberapa opsi untuk
-menyimpan meta data. Ada beberapa opsi dalam penyimpanan metadata
-tersebut. Salah satu solusinya adalah dengan mengkodekan label ke dalam
-nama gambar seperti yang dilakukan diatas.
-:::
-
-::: {.cell .markdown id="LWcy_x0Hjsnq"}
 ### **Storing to LMDB**
-
-Kunci akan menjadi pengenal unik untuk setiap gambar, dan nilai akan
-menjadi gambar itu sendiri. Baik kunci maupun nilai diharapkan berupa
-string, sehingga LMDB akan mengonversi nilai menjadi string saat
-menyimpan, dan mengembalikannya ke bentuk semula saat membacanya
-kembali.
-:::
-
-::: {.cell .code id="Dl9At1ySjxUS"}
-``` python
+Kunci akan menjadi pengenal unik untuk setiap gambar, dan nilai akan menjadi gambar itu sendiri. Baik kunci maupun nilai diharapkan berupa string, sehingga LMDB akan mengonversi nilai menjadi string saat menyimpan, dan mengembalikannya ke bentuk semula saat membacanya kembali.
+```python
 class CIFAR_Image:
     def __init__(self, image, label):
         # Dimensions of image for reconstruction - not really necessary
@@ -334,15 +144,9 @@ class CIFAR_Image:
         image = np.frombuffer(self.image, dtype=np.uint8)
         return image.reshape(*self.size, self.channels)
 ```
-:::
+Kedua, database harus tahu seberapa besar memori yang akan digunakan, sesuai dengan prinsip LMDB yaitu memory-mapped.
 
-::: {.cell .markdown id="rWt9O5PAkYRi"}
-Kedua, database harus tahu seberapa besar memori yang akan digunakan,
-sesuai dengan prinsip LMDB yaitu memory-mapped.
-:::
-
-::: {.cell .code id="SK8NYjfrkMQy"}
-``` python
+```python
 import lmdb
 import pickle
 
@@ -367,16 +171,11 @@ def store_single_lmdb(image, image_id, label):
         txn.put(key.encode("ascii"), pickle.dumps(value))
     env.close()
 ```
-:::
 
-::: {.cell .markdown id="IWKAYpn7kunh"}
-### **Storing With HDF5**
+### **Storing WIth HDF5**
+Storing gambar dengan metode HDF5
 
-Storing gambar dengan metode HDF5.
-:::
-
-::: {.cell .code id="GKOVkcw2kzpM"}
-``` python
+```python
 import h5py
 
 def store_single_hdf5(image, image_id, label):
@@ -399,23 +198,17 @@ def store_single_hdf5(image, image_id, label):
     )
     file.close()
 ```
-:::
 
-::: {.cell .markdown id="dQS1UW2slTkm"}
 ### **Experiments for Storing a Single Image**
-:::
 
-::: {.cell .code id="g3U9g3pwlXLJ"}
-``` python
+```python
 # Menggabungkan 3 fungsi sebelumnya menjadi sebuah dictionary
 _store_single_funcs = dict(
     disk=store_single_disk, lmdb=store_single_lmdb, hdf5=store_single_hdf5
 )
 ```
-:::
 
-::: {.cell .code colab="{\"base_uri\":\"https://localhost:8080/\"}" id="qEhNn7zHmyi1" outputId="90de8ab1-7802-4ae8-824e-e344a2f4d870"}
-``` python
+```python
 from timeit import timeit
 
 store_single_timings = dict()
@@ -430,24 +223,14 @@ for method in ("disk", "lmdb", "hdf5"):
     store_single_timings[method] = t
     print(f"Method: {method}, Time usage: {t}")
 ```
+Output:
+![alt text](2.png)
 
-::: {.output .stream .stdout}
-    Method: disk, Time usage: 0.002936279000095965
-    Method: lmdb, Time usage: 0.011037382999347756
-    Method: hdf5, Time usage: 0.004713100999651942
-:::
-:::
-
-::: {.cell .markdown id="ja48MJwFqgCO"}
 ## **Storing Many Images**
-:::
 
-::: {.cell .markdown id="skJN5dzrrDuM"}
-### **Adjusting the Code for Many Images**
-:::
+### Adjusting the Code for Many Images
 
-::: {.cell .code id="D-Y0hjmbqgdt"}
-``` python
+```python
 def store_many_disk(images, labels):
     """ Stores an array of images to disk
         Parameters:
@@ -514,14 +297,10 @@ def store_many_hdf5(images, labels):
     )
     file.close()
 ```
-:::
 
-::: {.cell .markdown id="LRyh6Q_drP02"}
 ### **Preparing the Dataset**
-:::
 
-::: {.cell .code colab="{\"base_uri\":\"https://localhost:8080/\"}" id="sS95iTrQrT3U" outputId="bbc28543-ca30-4740-9063-b23d8376bc03"}
-``` python
+```python
 #Menggandakan dataset supaya bisa melakukan test pada 100.000 gambar
 cutoffs = [10, 100, 1000, 10000, 100000]
 
@@ -533,19 +312,12 @@ labels = np.concatenate((labels, labels), axis=0)
 print(np.shape(images))
 print(np.shape(labels))
 ```
+Output: 
+![alt text](3.png)
 
-::: {.output .stream .stdout}
-    (100000, 32, 32, 3)
-    (100000,)
-:::
-:::
-
-::: {.cell .markdown id="cHie18MZrcts"}
 ### **Experiment for Storing Many Images**
-:::
 
-::: {.cell .code colab="{\"base_uri\":\"https://localhost:8080/\"}" id="meKqJU33rf_T" outputId="f74850ee-eb22-4de5-a4e3-cbae6f5b4795"}
-``` python
+```python
 _store_many_funcs = dict(
     disk=store_many_disk, lmdb=store_many_lmdb, hdf5=store_many_hdf5
 )
@@ -567,32 +339,12 @@ for cutoff in cutoffs:
         # Print out the method, cutoff, and elapsed time
         print(f"Method: {method}, Time usage: {t}")
 ```
+Output:
+![alt text](4.png)
 
-::: {.output .stream .stdout}
-    Method: disk, Time usage: 0.008488096999826666
-    Method: lmdb, Time usage: 0.009055309000359557
-    Method: hdf5, Time usage: 0.0033467530001871637
-    Method: disk, Time usage: 0.044951088000743766
-    Method: lmdb, Time usage: 0.012998969000364013
-    Method: hdf5, Time usage: 0.0033128790000773733
-    Method: disk, Time usage: 0.4144143189996612
-    Method: lmdb, Time usage: 0.03950096599965036
-    Method: hdf5, Time usage: 0.0052612400004363735
-    Method: disk, Time usage: 4.954296851000436
-    Method: lmdb, Time usage: 0.3332891230002133
-    Method: hdf5, Time usage: 0.029331480999644555
-    Method: disk, Time usage: 44.58069854799942
-    Method: lmdb, Time usage: 9.189596755999446
-    Method: hdf5, Time usage: 2.043123127999934
-:::
-:::
-
-::: {.cell .markdown id="FnsWhOkhvuYn"}
 Lalu, berapakah waktu yang digunakan untuk proses storing?
-:::
 
-::: {.cell .code colab="{\"base_uri\":\"https://localhost:8080/\",\"height\":1000}" id="COm-436rrm70" outputId="488163fb-e070-4694-d3ae-6015384eca8c"}
-``` python
+```python
 import matplotlib.pyplot as plt
 
 def plot_with_legend(
@@ -654,46 +406,17 @@ plot_with_legend(
     log=True,
 )
 ```
+![alt text](5.png)
+Generate graf pertama menampilkan perbedaan drastis antara storing png files dan LMBD atau HDF5.
 
-::: {.output .stream .stderr}
-    <ipython-input-75-99d89538a067>:15: MatplotlibDeprecationWarning: The seaborn styles shipped by Matplotlib are deprecated since 3.6, as they no longer correspond to the styles shipped by seaborn. However, they will remain available as 'seaborn-v0_8-<style>'. Alternatively, directly use the seaborn API instead.
-      plt.style.use("seaborn-whitegrid")
-:::
+![alt text](6.png)
+Graf kedua menunjukan log dari timing, menoroti bahwa HDF5 mulai lebih pelan dari LMDB, namun dengan kuantitas proses yang lebih besar.
 
-::: {.output .display_data}
-![](vertopal_09b1077ce3644278887b15679ecfa946/6410eaae791128b5e3c02cb51348f23bb55712a1.png)
-:::
-
-::: {.output .stream .stderr}
-    <ipython-input-75-99d89538a067>:15: MatplotlibDeprecationWarning: The seaborn styles shipped by Matplotlib are deprecated since 3.6, as they no longer correspond to the styles shipped by seaborn. However, they will remain available as 'seaborn-v0_8-<style>'. Alternatively, directly use the seaborn API instead.
-      plt.style.use("seaborn-whitegrid")
-:::
-
-::: {.output .display_data}
-![](vertopal_09b1077ce3644278887b15679ecfa946/73b2875673fb11c27671cde40208eb2cc7e703f4.png)
-:::
-:::
-
-::: {.cell .markdown id="4yfuSDSLv1rn"}
-Generate graf pertama menampilkan perbedaan drastis antara storing png
-files dan LMBD atau HDF5.
-
-Graf kedua menunjukan log dari timing, menoroti bahwa HDF5 mulai lebih
-pelan dari LMDB, namun dengan kuantitas proses yang lebih besar.
-:::
-
-::: {.cell .markdown id="tm6fIcYF6QWQ"}
 ## **Reading a Single Image**
-:::
 
-::: {.cell .markdown id="ObPIKAhZ6U8_"}
 ### **Reading From Disk**
-
 Pertama, baca satu gambar dan metadatanya dari file png atau csv
-:::
-
-::: {.cell .code id="BtFCA3816T9g"}
-``` python
+```python
 def read_single_disk(image_id):
     """ Stores a single image to disk.
         Parameters:
@@ -715,17 +438,13 @@ def read_single_disk(image_id):
 
     return image, label
 ```
-:::
 
-::: {.cell .markdown id="zuVdukov6jGq"}
 ### **Reading From LMDB**
 
-Kedua, baca gambar dan meta yang sama dengan LMDB. Metode ini membuka
-environment dan mulai membaca transaksi gambar.
-:::
+Kedua, baca gambar dan meta yang sama dengan LMDB. Metode ini membuka environment dan mulai membaca transaksi gambar.
 
-::: {.cell .code id="iFDawewX6l-H"}
-``` python
+
+```python
 def read_single_lmdb(image_id):
     """ Stores a single image to LMDB.
         Parameters:
@@ -753,14 +472,10 @@ def read_single_lmdb(image_id):
 
     return image, label
 ```
-:::
 
-::: {.cell .markdown id="yJhP-faw6z-n"}
 ### **Reading From HDF5**
-:::
 
-::: {.cell .code id="xybHWD4a62Wi"}
-``` python
+```python
 def read_single_hdf5(image_id):
     """ Stores a single image to HDF5.
         Parameters:
@@ -780,27 +495,17 @@ def read_single_hdf5(image_id):
 
     return image, label
 ```
-:::
+Untuk mengakses dataset yang beragam, dibutuhkan indexing file objek menggunakan forward slash(/)
 
-::: {.cell .markdown id="37WbfWfZ67Yq"}
-Untuk mengakses dataset yang beragam, dibutuhkan indexing file objek
-menggunakan forward slash(/)
-:::
-
-::: {.cell .code id="YQ-x-tNF66G4"}
-``` python
+```python
 _read_single_funcs = dict(
     disk=read_single_disk, lmdb=read_single_lmdb, hdf5=read_single_hdf5
 )
 ```
-:::
 
-::: {.cell .markdown id="QqbUyjC97HI3"}
 ### **Experiment for Reading a Single Image**
-:::
 
-::: {.cell .code colab="{\"base_uri\":\"https://localhost:8080/\"}" id="zVUg8bG27JbM" outputId="65f8eeb3-147f-4980-e5c1-6b254096db69"}
-``` python
+```python
 from timeit import timeit
 
 read_single_timings = dict()
@@ -815,30 +520,16 @@ for method in ("disk", "lmdb", "hdf5"):
     read_single_timings[method] = t
     print(f"Method: {method}, Time usage: {t}")
 ```
+Output:
+![](<Screenshot 2024-05-29 004727.png>)
 
-::: {.output .stream .stdout}
-    Method: disk, Time usage: 0.011241768000218144
-    Method: lmdb, Time usage: 0.010631148000356916
-    Method: hdf5, Time usage: 0.007381115000498539
-:::
-:::
+Didapatkan waktu yang digunakan oleh tiap metode. Dibuktikan bahwa menggunakan HDF5, waktu yang digunakan lebih cepat daripada metode lain yaitu 0.007381115000498539.
 
-::: {.cell .markdown id="edAcM-N77S-o"}
-Ddiapatkan waktu yang digunakan oleh tiap metode. Dibuktikan bahwa
-menggunakan HDF5, waktu yang digunakan lebih cepat daripada metode lain
-yaitu 0.007381115000498539.
-:::
-
-::: {.cell .markdown id="nP2HpQEf7urD"}
 ## **Reading Many Images**
-:::
 
-::: {.cell .markdown id="mub9jluD7zZL"}
-### **Adjusting the Code for Many Images** {#adjusting-the-code-for-many-images}
-:::
+### **Adjusting the Code for Many Images** 
 
-::: {.cell .code id="3K4A4Y7g72u8"}
-``` python
+```python
 def read_many_disk(num_images):
     """ Reads image from disk.
         Parameters:
@@ -918,14 +609,10 @@ _read_many_funcs = dict(
     disk=read_many_disk, lmdb=read_many_lmdb, hdf5=read_many_hdf5
 )
 ```
-:::
 
-::: {.cell .markdown id="8aGCDVZZ79JP"}
-\###**Experiment for Reading Many Images**
-:::
+### **Experiment for Reading Many Images**
 
-::: {.cell .code colab="{\"base_uri\":\"https://localhost:8080/\"}" id="ZNLltqwG8Bff" outputId="cc54cb5d-32ad-4976-910d-de6d8f1d87af"}
-``` python
+```python
 from timeit import timeit
 
 read_many_timings = {"disk": [], "lmdb": [], "hdf5": []}
@@ -943,33 +630,12 @@ for cutoff in cutoffs:
         # Print out the method, cutoff, and elapsed time
         print(f"Method: {method}, No. images: {cutoff}, Time usage: {t}")
 ```
+Output:
+![](7.png)
 
-::: {.output .stream .stdout}
-    Method: disk, No. images: 10, Time usage: 0.020918979000271065
-    Method: lmdb, No. images: 10, Time usage: 0.0052511640005832305
-    Method: hdf5, No. images: 10, Time usage: 0.0043201299995416775
-    Method: disk, No. images: 100, Time usage: 0.053635880000001634
-    Method: lmdb, No. images: 100, Time usage: 0.014505384000585764
-    Method: hdf5, No. images: 100, Time usage: 0.010487124000064796
-    Method: disk, No. images: 1000, Time usage: 0.4235059060001731
-    Method: lmdb, No. images: 1000, Time usage: 0.037363280000136
-    Method: hdf5, No. images: 1000, Time usage: 0.03121916100008093
-    Method: disk, No. images: 10000, Time usage: 4.373861555000076
-    Method: lmdb, No. images: 10000, Time usage: 0.3955842540008234
-    Method: hdf5, No. images: 10000, Time usage: 0.30526922499939246
-    Method: disk, No. images: 100000, Time usage: 45.66925518300013
-    Method: lmdb, No. images: 100000, Time usage: 2.2602655159998903
-    Method: hdf5, No. images: 100000, Time usage: 1.3998641270000007
-:::
-:::
+Didapatkan hasil dari hasil membaca many images dari berbagai metode. Hasil dapat dibaca dengan plot:
 
-::: {.cell .markdown id="AUJMcuFn8U1-"}
-Didapatkan hasil dari hasil membaca many images dari berbagai metode.
-Hasil dapat dibaca dengan plot:
-:::
-
-::: {.cell .code colab="{\"base_uri\":\"https://localhost:8080/\",\"height\":1000}" id="wMQEJ4hk8kko" outputId="98f38aba-5a8c-4cc5-ff00-0cc930fa1e2d"}
-``` python
+```python
 disk_x_r = read_many_timings["disk"]
 lmdb_x_r = read_many_timings["lmdb"]
 hdf5_x_r = read_many_timings["hdf5"]
@@ -994,46 +660,12 @@ plot_with_legend(
     log=True,
 )
 ```
+![alt text](8.png)
+Dari plot diatas, menunjukkan plot normal, dimana ada perbedaan drastis antara membaca file png dan LMDB atau HDF5.
 
-::: {.output .stream .stderr}
-    <ipython-input-76-99d89538a067>:15: MatplotlibDeprecationWarning: The seaborn styles shipped by Matplotlib are deprecated since 3.6, as they no longer correspond to the styles shipped by seaborn. However, they will remain available as 'seaborn-v0_8-<style>'. Alternatively, directly use the seaborn API instead.
-      plt.style.use("seaborn-whitegrid")
-:::
+![alt text](9.png)
+Sedangkan, graf kedua, menunjukkan log of timings, menyoroti perbedaan relatif dengan gambar yang lebih sedikit. Dapat dilihat bahwa HDF5 mulai agak terlambar, namun dengan bertambahnya gambar, HDF5 menjadi lebih cepat secara konsisten, lebih cepat dari LMDB dengan margin yang kecil.
 
-::: {.output .display_data}
-![](vertopal_09b1077ce3644278887b15679ecfa946/2cbf9f5048373a7a6d0e17296d43db2d10743269.png)
-:::
-
-::: {.output .stream .stderr}
-    <ipython-input-76-99d89538a067>:15: MatplotlibDeprecationWarning: The seaborn styles shipped by Matplotlib are deprecated since 3.6, as they no longer correspond to the styles shipped by seaborn. However, they will remain available as 'seaborn-v0_8-<style>'. Alternatively, directly use the seaborn API instead.
-      plt.style.use("seaborn-whitegrid")
-:::
-
-::: {.output .display_data}
-![](vertopal_09b1077ce3644278887b15679ecfa946/9318d21c520bba9f51523a3bf87860e208b102c1.png)
-:::
-:::
-
-::: {.cell .markdown id="Z_gPuHYC8wXG"}
-Dari plot diatas, menunjukkan plot normal, dimana ada perbedaan drastis
-antara membaca file png dan LMDB atau HDF5.
-
-Sedangkan, graf kedua, menunjukkan log of timings, menyoroti perbedaan
-relatif dengan gambar yang lebih sedikit. Dapat dilihat bahwa HDF5 mulai
-agak terlambar, namun dengan bertambahnya gambar, HDF5 menjadi lebih
-cepat secara konsisten, lebih cepat dari LMDB dengan margin yang kecil.
-:::
-
-::: {.cell .markdown id="fZZF1kfq9SuZ"}
 ## **Considering Disk Usage**
 
-Kecepatan bukanlah satu-satunya faktor yang penting dalam hal kinerja.
-Saat kita memiliki dataset yang besar, seperti contohnya dataset gambar
-yang mencapai 3TB, kita juga harus mempertimbangkan aspek penyimpanan.
-Bayangkan Anda memiliki banyak gambar yang tersimpan dalam hard drive
-Anda. Untuk meningkatkan kinerjanya, Anda mungkin ingin membuat salinan
-gambar-gambar tersebut dengan menggunakan metode penyimpanan yang
-berbeda. Namun, perlu diingat bahwa ini juga berarti Anda harus
-memastikan bahwa hard drive Anda memiliki ruang yang cukup untuk
-menyimpan semua salinan tersebut.
-:::
+Kecepatan bukanlah satu-satunya faktor yang penting dalam hal kinerja. Saat kita memiliki dataset yang besar, seperti contohnya dataset gambar yang mencapai 3TB, kita juga harus mempertimbangkan aspek penyimpanan. Bayangkan Anda memiliki banyak gambar yang tersimpan dalam hard drive Anda. Untuk meningkatkan kinerjanya, Anda mungkin ingin membuat salinan gambar-gambar tersebut dengan menggunakan metode penyimpanan yang berbeda. Namun, perlu diingat bahwa ini juga berarti Anda harus memastikan bahwa hard drive Anda memiliki ruang yang cukup untuk menyimpan semua salinan tersebut.
